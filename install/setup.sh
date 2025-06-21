@@ -42,9 +42,7 @@ DB_HOST=localhost
 DB_PORT=5432
 DB_NAME=dds_db
 DB_USER=postgres
-DB_PASSWORD=12345678
-
-export PGPASSWORD="$DB_PASSWORD"
+DB_PASSWORD="$PGPASSWORD"
 
 echo "- Checking PostgreSQL server at $DB_HOST:$DB_PORT..."
 if ! pg_isready -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER" > /dev/null 2>&1; then
@@ -89,7 +87,7 @@ fi
 # ================================
 # ✅ Export and Log All Environment Variables
 # ================================
-SECRETS_FILE="$SCRIPT_DIR/.env.generated"
+SECRETS_FILE="$SCRIPT_DIR/.env"
 echo "- Logging exported environment variables"
 > "$SECRETS_FILE"
 

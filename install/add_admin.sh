@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# ================================
+# ♻️ Source Terminal for Latest Changes
+# ================================
+echo "- Sourcing ~/.bashrc to load latest environment changes..."
+source ~/.bashrc
+
 # =======================
 # ⚠️ Admin User Insertion
 # =======================
@@ -11,9 +17,6 @@ echo "- It may create a database if it doesn't exist."
 DB_NAME="dds_db"
 DB_USER="postgres"
 DB_HOST="localhost"  # Default to localhost, adjust if needed
-DB_PASSWORD=12345678
-
-export PGPASSWORD="$DB_PASSWORD"
 
 # === Ask for admin email ===
 read -p "- Enter admin email: " ADMIN_EMAIL

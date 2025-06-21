@@ -68,15 +68,20 @@ chmod +x install/uninstall.sh
 
 ## ✅ STEP 2: Setup Environment Variables and Run Backend Server
  
-The shell script `setup.sh` automatically generate and source all your environment variables and keys, edit it for any modification:
+The shell script `setup.sh` automatically generate `.env` file and source all your environment variables and keys, edit it for any modification:
 
 Then source it:
-
 ```bash
 # Go to project $HOME dir and make script executable
 chmod +x install/setup.sh
 # Run shell script
 source install/setup.sh
+```
+
+For sourcing environment varaibles to other terminals, use the generated `.env` file to source:
+```bash
+# Run shell script
+source install/.env.generated
 ```
 
 Run Backend Server

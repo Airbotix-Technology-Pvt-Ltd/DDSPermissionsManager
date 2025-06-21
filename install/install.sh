@@ -1,6 +1,23 @@
 #!/bin/bash
 set -e
 
+echo "- This script will install the following components:"
+echo "  - Java (OpenJDK 11)"
+echo "  - curl"
+echo "  - Node Version Manager (nvm)"
+echo "  - Node.js v18"
+echo "  - PostgreSQL 14"
+echo ""
+read -p "- Do you want to continue? (y/yes to proceed): " confirm
+confirm=$(echo "$confirm" | tr '[:upper:]' '[:lower:]')
+echo ""
+
+if [[ "$confirm" != "y" && "$confirm" != "yes" ]]; then
+  echo "❌ Installation cancelled."
+  exit 1
+fi
+
+
 echo "- Updating system packages..."
 sudo apt update -y > /dev/null 2>&1
 
@@ -21,7 +38,7 @@ fi
 # -------------------- NVM + Node.js --------------------
 if ! command -v nvm &>/dev/null; then
   echo "- Installing Node Version Manager (nvm)..."
-  curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash > /dev/null 2>&1
+  curl -s -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash > /dev/null 2>&1
   export NVM_DIR="$HOME/.nvm"
   [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 fi
@@ -44,6 +61,7 @@ fi
 if ! command -v psql &>/dev/null; then
   echo "- Installing PostgreSQL..."
   sudo apt install -y postgresql-14 postgresql-client-14 postgresql-contrib-14 > /dev/null 2>&1
+  sudo pg_createcluster 14 main --start > /dev/null 2>&1
 else
   echo "- PostgreSQL is already installed: $(psql --version | head -n 1)"
 fi
@@ -55,10 +73,17 @@ sudo sed -i "s/^local\s\+all\s\+postgres\s\+peer/local all postgres trust/" "$PG
 sudo systemctl restart postgresql > /dev/null 2>&1
 
 # -------------------- Set Postgres Password & Create DB --------------------
-echo "🗄️ Creating database 'dds_pm_db'..."
-sudo -u postgres psql > /dev/null 2>&1 <<EOF
-\password postgres
+read -s -p "- Enter new PostgreSQL password for 'postgres' user: " POSTGRES_PASSWORD
+echo
+# Persist in .bashrc
+echo "export PGPASSWORD='$POSTGRES_PASSWORD'" >> ~/.bashrc
+echo "- Password saved to ~/.bashrc (visible in plain text — be cautious!)"
+# Apply password to postgres user and create DB
+sudo -u postgres psql <<EOF >/dev/null 2>&1
+ALTER USER postgres WITH PASSWORD '${POSTGRES_PASSWORD}'; 
+\q
 EOF
+
 
 # -------------------- Final Report --------------------
 echo ""

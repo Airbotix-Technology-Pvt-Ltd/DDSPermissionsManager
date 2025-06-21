@@ -5,4 +5,4 @@
 frontend/cypress/videos
 install/keys/
 install/client_secret_*.json
-install/.env.generated
+install/.env
