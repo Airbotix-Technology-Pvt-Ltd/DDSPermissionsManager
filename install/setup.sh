@@ -92,7 +92,7 @@ echo "- Logging exported environment variables"
 > "$SECRETS_FILE"
 
 # Micronaut environments
-export MICRONAUT_ENVIRONMENTS=prod,dev
+export MICRONAUT_ENVIRONMENTS=airbotix
 
 # Core Database config
 export DPM_JDBC_URL="jdbc:postgresql://$DB_HOST:$DB_PORT/$DB_NAME"
