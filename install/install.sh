@@ -76,7 +76,10 @@ sudo systemctl restart postgresql > /dev/null 2>&1
 read -s -p "- Enter new PostgreSQL password for 'postgres' user: " POSTGRES_PASSWORD
 echo
 # Persist in .bashrc
+sed -i '/^export PGPASSWORD=/d' ~/.bashrc
+unset PGPASSWORD
 echo "export PGPASSWORD='$POSTGRES_PASSWORD'" >> ~/.bashrc
+export PGPASSWORD='$POSTGRES_PASSWORD'
 echo "- Password saved to ~/.bashrc (visible in plain text — be cautious!)"
 # Apply password to postgres user and create DB
 sudo -u postgres psql <<EOF >/dev/null 2>&1

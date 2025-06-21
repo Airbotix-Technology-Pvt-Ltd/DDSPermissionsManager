@@ -24,6 +24,8 @@ sudo apt remove -y postgresql* postgresql-client* postgresql-14* > /dev/null 2>&
 sudo rm -rf /etc/postgresql /var/lib/postgresql /var/log/postgresql > /dev/null 2>&1
 sudo deluser postgres > /dev/null 2>&1 || true
 sudo delgroup postgres > /dev/null 2>&1 || true
+sed -i '/^export PGPASSWORD=/d' ~/.bashrc
+unset PGPASSWORD
 
 echo "- Removing Node.js & npm..."
 sudo apt remove --purge -y nodejs npm libnode-dev > /dev/null 2>&1
