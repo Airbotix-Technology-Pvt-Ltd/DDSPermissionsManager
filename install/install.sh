@@ -4,6 +4,7 @@ set -e
 echo "- This script will install the following components:"
 echo "  - Java (OpenJDK 11)"
 echo "  - curl"
+echo "  - jq"
 echo "  - Node Version Manager (nvm)"
 echo "  - Node.js v18"
 echo "  - PostgreSQL 14"
@@ -35,6 +36,14 @@ if ! command -v curl &>/dev/null; then
   sudo apt install -y curl > /dev/null 2>&1
 fi
 
+# -------------------- JQ --------------------
+if ! command -v jq &>/dev/null; then
+  echo "- Installing jq..."
+  sudo apt-get install -y jq > /dev/null 2>&1
+else
+  echo "- jq is already installed."
+fi
+
 # -------------------- NVM + Node.js --------------------
 if ! command -v nvm &>/dev/null; then
   echo "- Installing Node Version Manager (nvm)..."
@@ -54,7 +63,6 @@ if ! command -v node &>/dev/null; then
 else
   echo "- Node.js is already installed: $(node -v)"
 fi
-
 
 
 # -------------------- PostgreSQL --------------------

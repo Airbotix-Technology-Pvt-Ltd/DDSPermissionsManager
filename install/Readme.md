@@ -83,7 +83,7 @@ source install/setup.sh
 For sourcing environment varaibles to other terminals, use the generated `.env` file to source:
 ```bash
 # Export the env varailes
-source install/.env.generated
+source install/.env
 ```
 
 Run Backend Server
@@ -111,13 +111,13 @@ To run the application in docker, follow below steps:
 cd DDSPermissionsManager
 
 # Export the env varailes
-source install/.env.generated
+source install/.env
 
 # Generate a dockerfile
 ./gradlew dockerfile
 
 # Build the layers
-./gradlew dockerfile
+./gradlew buildLayers
 
 # Build the docker from generated docker image using docker image
 docker compose build
