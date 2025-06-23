@@ -72,6 +72,8 @@ The shell script `setup.sh` automatically generate `.env` file and source all yo
 
 Then source it:
 ```bash
+# Go to project $HOME dir
+cd DDSPermissionsManager
 # Go to project $HOME dir and make script executable
 chmod +x install/setup.sh
 # Run shell script
@@ -80,7 +82,7 @@ source install/setup.sh
 
 For sourcing environment varaibles to other terminals, use the generated `.env` file to source:
 ```bash
-# Run shell script
+# Export the env varailes
 source install/.env.generated
 ```
 
@@ -89,7 +91,7 @@ Run Backend Server
 # Go to project $HOME dir and run gradle
 ./gradlew app:run -t
 ```
-Backend runs on `http://localhost:8080`
+The application will be live on: `http://localhost:8080`
 
 
 ## ✅ STEP 3: Add Initial Admin User from another terminal
@@ -101,5 +103,29 @@ chmod +x install/add_admin.sh
 # Run shell script
 ./install/add_admin.sh
 ```
+## ✅ STEP 4: Building and running a docker image
+
+To run the application in docker, follow below steps:
+```bash
+# Go to project $HOME dir
+cd DDSPermissionsManager
+
+# Export the env varailes
+source install/.env.generated
+
+# Generate a dockerfile
+./gradlew dockerfile
+
+# Build the layers
+./gradlew dockerfile
+
+# Build the docker from generated docker image using docker image
+docker compose build
+
+# Run the docker
+docker compose up
+```
+
+The application will be live on: `http://localhost:8080`
 
 ---

@@ -1,0 +1,18 @@
+services:
+  myapp:
+    image: dds_permission_manager
+    network_mode: "host"
+    build:
+      context: ./app/build/docker/main/
+      dockerfile: Dockerfile
+    env_file:
+      - ./install/.env    
+    environment:
+      - DPM_JDBC_PASSWORD=${PGPASSWORD}
+      - JWT_PRIVATE_KEY=/home/app/keys/pkcs8.key
+      - JWT_PUBLIC_KEY=/home/app/keys/publickey.crt
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./install/keys:/home/app/keys
+      
