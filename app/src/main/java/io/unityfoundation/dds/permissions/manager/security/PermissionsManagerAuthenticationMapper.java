@@ -32,7 +32,7 @@ import java.util.*;
 
 @Replaces(DefaultOpenIdAuthenticationMapper.class)
 @Singleton
-@Named("google")
+@Named("keycloak")
 public class PermissionsManagerAuthenticationMapper implements OpenIdAuthenticationMapper {
 
     private final UserService userService;

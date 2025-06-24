@@ -28,7 +28,7 @@ describe('should logout of the app', () => {
         
         cy.get('.login-button span a')
         .invoke('text')
-        .should('equal', 'Login with Google');
+        .should('equal', 'Login with Keycloak');
     });
 
     

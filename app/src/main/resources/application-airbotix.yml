@@ -45,3 +45,13 @@ micronaut:
       login-success: ${MICRONAUT_SECURITY_REDIRECT_LOGIN_SUCCESS}
       login-failure: ${MICRONAUT_SECURITY_REDIRECT_LOGIN_FAILURE}
       logout: ${MICRONAUT_SECURITY_REDIRECT_LOGOUT}
+---
+micronaut:
+  security:
+    oauth2:
+      clients:
+        keycloak:
+          client-id: ${MICRONAUT_SECURITY_OAUTH2_CLIENTS_KEYCLOAK_CLIENT_ID}
+          client-secret: ${MICRONAUT_SECURITY_OAUTH2_CLIENTS_KEYCLOAK_CLIENT_SECRET}
+          openid:
+            issuer: ${MICRONAUT_SECURITY_OAUTH2_CLIENTS_KEYCLOAK_OPENID_ISSUER}

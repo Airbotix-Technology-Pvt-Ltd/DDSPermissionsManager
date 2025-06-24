@@ -7,7 +7,7 @@
 		"title": "DDS Permissions Manager",
 		"header": "DDS Permissions Manager",
 		"label": "Login",
-		"button": "Login with Google"
+		"button": "Login with Keycloak"
 	},
 
 	"group": {

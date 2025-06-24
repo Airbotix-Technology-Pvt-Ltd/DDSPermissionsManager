@@ -5,12 +5,14 @@
 	import { goto } from '$app/navigation';
 	import { httpAdapter } from '../appconfig';
 	import wavesSVG from '../icons/waves.svg';
-	import googleSVG from '../icons/google.svg';
 	import groups from '../stores/groups';
 	import groupsTotalPages from '../stores/groupsTotalPages';
 	import groupsTotalSize from '../stores/groupsTotalSize';
 	import messages from '$lib/messages.json';
 	import { baseURL } from '../appconfig';
+	import { AuthService } from '../appconfig';
+	import { SVG } from '../appconfig';
+
 	const itemsPerPage = 10;
 
 	export let data, errors;
@@ -58,15 +60,15 @@
 		<hr />
 		<center>
 			<!-- svelte-ignore a11y-click-events-have-key-events -->
-			<div class="login-button" on:click={() => goto(`${baseURL}/oauth/login/google`, true)}>
+			<div class="login-button" on:click={() => goto(`${baseURL}/oauth/login/${AuthService}`, true)}>
 				<img
-					src={googleSVG}
+					src={SVG}
 					alt="Login"
 					class="icon"
 					style="scale: 55%; margin: 0.1rem 0 0.1rem 0;"
 				/>
 				<span style="margin-left: 0; font-size: 1.4rem"
-					><a rel="external" href={`${baseURL}/oauth/login/google`}
+					><a rel="external" href={`${baseURL}/oauth/login/${AuthService}`}
 						>{messages['login']['button']}</a
 					></span
 				>
