@@ -70,16 +70,16 @@ REFRESH_SECRET=$(openssl rand -base64 32)
 SALT=$(openssl rand -base64 32)
 
 # ================================
-# 📦 Load Google OAuth2 Secrets
+# 📦 Load Keycloak OAuth2 Secrets
 # ================================
-GOOGLE_SECRET_FILE=$(ls "$SCRIPT_DIR"/client_secret_*.json 2>/dev/null | head -n 1)
+SECRET_FILE="$SCRIPT_DIR/auth_client.json"
 
-if [ -n "$GOOGLE_SECRET_FILE" ] && [ -f "$GOOGLE_SECRET_FILE" ]; then
+if [ -f "$SECRET_FILE" ]; then
   echo "- Loading Google OAuth client credentials..."
-  CLIENT_ID=$(jq -r '.web.client_id' "$GOOGLE_SECRET_FILE")
-  CLIENT_SECRET=$(jq -r '.web.client_secret' "$GOOGLE_SECRET_FILE")
+  CLIENT_ID=$(jq -r '.clientId' "$SECRET_FILE")
+  CLIENT_SECRET=$(jq -r '.secret' "$SECRET_FILE")
 else
-  echo "- Google client_secret_*.json file not found. Skipping Google OAuth config."
+  echo "- Google auth_client.json not found. Skipping Google OAuth config."
   CLIENT_ID=""
   CLIENT_SECRET=""
 fi
@@ -112,8 +112,7 @@ export JWT_SALT_VALUE="$SALT"
 # OAuth redirect URLs
 export MICRONAUT_SECURITY_REDIRECT_LOGIN_SUCCESS="http://localhost:8080"
 export MICRONAUT_SECURITY_REDIRECT_LOGIN_FAILURE="http://localhost:8080/failed-auth"
-export MICRONAUT_SECURITY_REDIRECT_LOGOUT="http://localhost:8080"
-
+export MICRONAUT_SECURITY_REDIRECT_LOGOUT="http://localhost:8180/realms/dds-realm/protocol/openid-connect/logout"
 # WebSocket Config
 export DPM_WEBSOCKETS_BROADCAST_CHANGES="false"
 
@@ -122,10 +121,10 @@ export PERMISSIONS_MANAGER_APPLICATION_CLIENT_CERTIFICATES_TIME_EXPIRY="365"
 export PERMISSIONS_MANAGER_APPLICATION_PERMISSIONS_FILE_DOMAIN="0"
 export PERMISSIONS_MANAGER_APPLICATION_PASSPHRASE_LENGTH="32"
 
-# Google OAuth (may be empty if file not found)
-export MICRONAUT_SECURITY_OAUTH2_CLIENTS_GOOGLE_CLIENT_ID="$CLIENT_ID"
-export MICRONAUT_SECURITY_OAUTH2_CLIENTS_GOOGLE_CLIENT_SECRET="$CLIENT_SECRET"
-export MICRONAUT_SECURITY_OAUTH2_CLIENTS_GOOGLE_OPENID_ISSUER="https://accounts.google.com"
+# Keycloak (ask user on run )
+export MICRONAUT_SECURITY_OAUTH2_CLIENTS_KEYCLOAK_CLIENT_ID="$CLIENT_ID"
+export MICRONAUT_SECURITY_OAUTH2_CLIENTS_KEYCLOAK_CLIENT_SECRET="$CLIENT_SECRET"
+export MICRONAUT_SECURITY_OAUTH2_CLIENTS_KEYCLOAK_OPENID_ISSUER="http://localhost:8180/realms/dds-realm"
 
 # Log all exports to .env.generated
 export -p | grep -E 'MICRONAUT_|DPM_|PERMISSIONS_MANAGER_|JWT_' | sed 's/^declare -x //' >> "$SECRETS_FILE"

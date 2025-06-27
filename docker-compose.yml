@@ -1,18 +1,53 @@
+
 services:
+  postgres:
+    image: postgres:14
+    container_name: postgres-db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${PGPASSWORD}
+      POSTGRES_DB: keycloak_db
+    # ports:
+    #   - "${DB_PORT}:5432" #  restrict database access to containers only (internal-only access).
+    volumes:
+      - ./docker/postgresql/data:/var/lib/postgresql/data
+      - ./docker/postgresql:/docker-entrypoint-initdb.d
+    env_file:
+      - ./docker/.env
+
+  keycloak:
+    image: mykeycloak
+    container_name: keycloak
+    build:
+      context: ./docker/keycloak
+      dockerfile: Dockerfile
+    env_file:
+      - ./docker/.env  
+    volumes:
+      - ./docker/keys:/home/app/keys
+    environment:
+      - KC_BOOTSTRAP_ADMIN_USERNAME=admin
+      - KC_BOOTSTRAP_ADMIN_PASSWORD=change_me
+    ports:
+      - "${KEYCLOAK_PORT}:8443"
+    command: >
+      start --optimized  --https-key-store-file=/home/app/keys/keystore.jks --https-key-store-password=changeit
+
   myapp:
     image: dds_permission_manager
-    network_mode: "host"
+    container_name: dds_permission_manager
     build:
       context: ./app/build/docker/main/
       dockerfile: Dockerfile
     env_file:
-      - ./install/.env    
+      - ./docker/.env    
     environment:
       - DPM_JDBC_PASSWORD=${PGPASSWORD}
       - JWT_PRIVATE_KEY=/home/app/keys/pkcs8.key
       - JWT_PUBLIC_KEY=/home/app/keys/publickey.crt
     ports:
-      - "8080:8080"
+      - "${DDS_PORT}:8443"
     volumes:
-      - ./install/keys:/home/app/keys
-      
+      - ./docker/keys:/home/app/keys
+    entrypoint: ["/bin/sh", "-c", "sleep 5 && java -Djavax.net.ssl.trustStore=./keys/truststore.jks -Djavax.net.ssl.trustStorePassword=changeit -jar application.jar"]
