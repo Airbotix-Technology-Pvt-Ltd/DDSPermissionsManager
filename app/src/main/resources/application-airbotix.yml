@@ -58,17 +58,8 @@ micronaut:
   server:
     ssl:
       enabled: true
-      port: 8443
       key-store:
         path: file:/home/app/keys/keystore.p12 
         type: PKCS12
         password: changeit
-
-  http:
-    client:
-      ssl:
-        enabled: true
-        trust-store:
-          path: file:/home/app/keys/truststore.jks  
-          type: JKS
-          password: changeit
+        provider: default
