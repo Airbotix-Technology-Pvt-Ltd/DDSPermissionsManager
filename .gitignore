@@ -3,3 +3,10 @@
 .DS_Store
 .history/
 frontend/cypress/videos
+install/keys/
+install/client_secret_*.json
+install/.env
+docker/keys
+docker/.env
+docker/auth_client.json
+docker/postgresql/data

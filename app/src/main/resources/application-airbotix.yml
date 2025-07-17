@@ -1,0 +1,65 @@
+# Copyright 2023 DDS Permissions Manager Authors
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+datasources:
+  default:
+    url: ${DPM_JDBC_URL}
+    driverClassName: ${DPM_JDBC_DRIVER}
+    username: ${DPM_JDBC_USER}
+    password: ${DPM_JDBC_PASSWORD}
+    db-type: ${DATASOURCES_DEFAULT_DB_TYPE}
+---
+permissions-manager:
+  application:
+    passphrase:
+      salt: ${JWT_SALT_VALUE}
+      length: ${PERMISSIONS_MANAGER_APPLICATION_PASSPHRASE_LENGTH}
+    client-certificate:
+      time-expiry: ${PERMISSIONS_MANAGER_APPLICATION_CLIENT_CERTIFICATES_TIME_EXPIRY} # in days
+    permissions-file:
+      domain: ${PERMISSIONS_MANAGER_APPLICATION_PERMISSIONS_FILE_DOMAIN}
+---
+micronaut:
+  security:
+    token:
+      jwt:
+        signatures:
+          secret:
+            generator:
+              secret: ${MICRONAUT_SECURITY_TOKEN_JWT_SIGNATURES_SECRET_GENERATOR_SECRET}
+              jws-algorithm: HS256
+        generator:
+          refresh-token:
+            secret: ${MICRONAUT_SECURITY_TOKEN_JWT_GENERATOR_REFRESH_TOKEN_SECRET}
+    redirect:
+      login-success: ${MICRONAUT_SECURITY_REDIRECT_LOGIN_SUCCESS}
+      login-failure: ${MICRONAUT_SECURITY_REDIRECT_LOGIN_FAILURE}
+      logout: ${MICRONAUT_SECURITY_REDIRECT_LOGOUT}
+---
+micronaut:
+  security:
+    oauth2:
+      clients:
+        keycloak:
+          client-id: ${MICRONAUT_SECURITY_OAUTH2_CLIENTS_KEYCLOAK_CLIENT_ID}
+          client-secret: ${MICRONAUT_SECURITY_OAUTH2_CLIENTS_KEYCLOAK_CLIENT_SECRET}
+          openid:
+            issuer: ${MICRONAUT_SECURITY_OAUTH2_CLIENTS_KEYCLOAK_OPENID_ISSUER}
+  server:
+    ssl:
+      enabled: true
+      key-store:
+        path: file:/home/app/keys/keystore.p12 
+        type: PKCS12
+        password: changeit
+        provider: default

@@ -1,3 +1,29 @@
+# DDS Permissions Manager – AIRBOTIX (Keycloak Integration)
+
+The DDS Permissions Manager has been enhanced with **Keycloak integration** for secure OAuth2-based authentication and authorization.
+
+### What’s New?
+
+* **Integrated Keycloak** into the service using [Micronaut OAuth2 + Keycloak](https://guides.micronaut.io/latest/micronaut-oauth2-keycloak-gradle-java.html).
+* Added **Docker-based setup** for easier deployment.
+* Created two new folders:
+
+  * `docker/`: Contains the Docker environment setup
+    * `setup.sh`: Bash script to set all required environment variables
+    * `Dockerfile`, `docker-compose.yml`: To build and run all services including Keycloak
+  * `install/`: Includes installation scripts for dependencies and environment setup
+
+## Getting issues in logout - Keycloak
+OAuth2, when used with OpenID Connect (OIDC), supports a standard logout mechanism through the `end_session_endpoint`, which allows users to be logged out from both the application and the identity provider. This typically works out-of-the-box if the provider and the application adhere to standard OIDC flows.
+
+In the DDS application, however, the OAuth2 configuration has been customized. These customizations prevent Micronaut’s default OpenID Connect logout behavior from functioning as intended. As a result, the application does not automatically handle logouts through the OIDC provider’s standard endpoint.
+
+Previously, Google was used as the authentication provider. With Google, logging out was effectively handled by clearing browser cookies, as Google’s session state is tied to those cookies. But with Keycloak, which maintains its own server-side session, an explicit call to Keycloak’s logout endpoint is required to fully terminate the user session.
+
+To work around this limitation, the current implementation manually redirects the user to Keycloak’s logout endpoint. However, Keycloak requires an `id_token_hint` in order to safely redirect the user back to the application’s post-logout URI. This `id_token_hint` is not currently accessible in the DDS app due to the custom OAuth2 setup. Micronaut does receive the `id_token_hint` during authentication, but the current configuration does not expose or persist it in a way that makes it available during logout.
+
+Furthermore, the redirect URI used in the logout request is currently static and cannot be dynamically appended with the required `id_token_hint`. This breaks the intended flow of redirecting the user back to the app after logout.
+
 # DDS Permissions Manager
 
 DDS stands for [Data Distribution Service](https://www.omg.org/spec/DDS/).

@@ -12,9 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import axios from 'axios';
+import googleSVG from './icons/google.svg';
+import keycloakSVG from './icons/keycloak.svg';
 
 const baseURL = '/api'
-
+const AuthService = "keycloak" // "google"
+const SVG = keycloakSVG // googleSVG
 axios.defaults.baseURL = baseURL;
 const httpAdapter = axios.create({ withCredentials: true });
 
@@ -25,4 +28,4 @@ function createWebSocket(url, path) { // url = $page.url from SvelteKit store
     return new WebSocket(wsURL);
 }
 
-export { httpAdapter, createWebSocket, baseURL }
+export { httpAdapter, createWebSocket, baseURL, SVG, AuthService}
